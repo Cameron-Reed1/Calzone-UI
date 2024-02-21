@@ -1,3 +1,6 @@
 [submodule "lvgl"]
-	path = lvgl
+	path = deps/lvgl
 	url = https://github.com/lvgl/lvgl.git
+[submodule "deps/argparse"]
+	path = deps/argparse
+	url = https://gitea.cam123.dev/CameronReed/Cpp-Argument-Parser.git
