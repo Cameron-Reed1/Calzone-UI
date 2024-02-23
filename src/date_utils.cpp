@@ -18,7 +18,7 @@ bool isLeapYear(int year)
     return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
 }
 
-uint8_t firstDayOfMonth(MONTH month, int year)
+uint8_t firstDayOfMonth(int month, int year)
 {
     int d = year % 100;
     uint8_t first_of_year = (century_start[(year / 100) % 4] + d + (d / 4) - isLeapYear(year) + 7) % 7;
@@ -29,7 +29,7 @@ uint8_t firstDayOfMonth(MONTH month, int year)
     return (first_of_year + offsets[month]) % 7;
 }
 
-uint8_t daysInMonth(MONTH month, int year)
+uint8_t daysInMonth(int month, int year)
 {
     if (isLeapYear(year))
     {

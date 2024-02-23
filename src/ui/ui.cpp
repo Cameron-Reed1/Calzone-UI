@@ -21,8 +21,8 @@
 static lv_obj_t* screen;
 static lv_obj_t* time_label;
 static lv_obj_t* ip_label;
-static lvc_calendar_t* calendar;
-static lvc_events_panel_t* events_panel;
+static Calendar* calendar;
+static EventsPanel* events_panel;
 static lv_style_t test_style;
 
 static char ip_addr[INET_ADDRSTRLEN];
@@ -60,7 +60,7 @@ void create_widgets(void)
     lv_label_set_text_fmt(ip_label, "IP: %s", ip_addr);
 	lv_obj_align(ip_label, LV_ALIGN_BOTTOM_LEFT, 5, -5);
 
-    events_panel = create_events_panel(screen);
+    events_panel = new EventsPanel(screen);
     lv_obj_set_size(events_panel->panel, disp_hpercent_to_px(20), disp_height);
     lv_obj_align(events_panel->panel, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_border_width(events_panel->panel, 2, LV_PART_MAIN);
@@ -69,7 +69,7 @@ void create_widgets(void)
 
     // Calendar must be created last. It calls the function to update the events
     uint32_t cal_width = disp_hpercent_to_px(70);
-    calendar = create_calendar(screen, cal_width);
+    calendar = new Calendar(screen, cal_width);
     lv_obj_align(calendar->calendar, LV_ALIGN_LEFT_MID, disp_hpercent_to_px(5), 0);
 
 
@@ -84,8 +84,8 @@ void create_widgets(void)
 
 void destroy_widgets(void)
 {
-    destroy_calendar(calendar);
-    destroy_events_panel(events_panel);
+    delete calendar;
+    delete events_panel;
 
     lv_obj_clean(screen);
 }
@@ -119,7 +119,7 @@ void check_time_timer(lv_timer_t* timer)
         lv_obj_send_event(calendar->calendar, LV_EVENT_REFRESH, ct);
     } else if (min != ct->tm_min) {
         min = ct->tm_min;
-        updateEvents(ct->tm_mday, ct->tm_mon, ct->tm_year + 1900);
+        Events::update(ct->tm_mday, ct->tm_mon, ct->tm_year + 1900);
 
         get_ip(ip_addr, INET_ADDRSTRLEN);
         lv_label_set_text_fmt(ip_label, "IP: %s", ip_addr);
@@ -133,13 +133,13 @@ void update_events_timer(lv_timer_t* timer)
     time_t t = time(NULL);
     struct tm* ct = localtime(&t);
 
-    updateEvents(ct->tm_mday, ct->tm_mon, ct->tm_year + 1900);
+    Events::update(ct->tm_mday, ct->tm_mon, ct->tm_year + 1900);
 }
 
 
 void update_time_label(lv_event_t* event)
 {
-	struct tm* ct = lv_event_get_param(event);
+	struct tm* ct = (struct tm*) lv_event_get_param(event);
 
 	char time_str[TIME_BUF_LEN];
 	strftime(time_str, TIME_BUF_LEN, "%I:%M:%S %p", ct);

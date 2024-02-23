@@ -25,7 +25,7 @@ OFILES      := $(addprefix $(OFILE_DIR)/, $(notdir $(C_SOURCES:.c=.o) $(CXX_SOUR
 OPT         := -O2
 CPPFLAGS    := $(INCLUDES) -MMD
 CFLAGS      := $(OPT) -Wall -Wextra -Wpedantic
-CXXFLAGS    := $(OPT) -std=c++17 -Wall -Wextra -Wpedantic
+CXXFLAGS    := $(OPT) -std=c++17 -Wall -Wextra #-Wpedantic
 
 
 LDFLAGS     := 

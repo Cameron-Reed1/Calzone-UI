@@ -27,7 +27,7 @@ void* tick_thread(void* arg);
 
 void fb_flush_cb(lv_display_t* display, const lv_area_t* area, uint8_t* px_map)
 {
-	struct framebuf* fb = (struct framebuf*)lv_display_get_user_data(display);
+	framebuf* fb = (framebuf*)lv_display_get_user_data(display);
 
 	int32_t area_width_b = (area->x2 - area->x1 + 1) * 2; // Two bytes per pixel
 
@@ -58,7 +58,7 @@ int lvgl_fb_run(const char* const fb_dev)
     sigaction(SIGINT, &act, NULL);
 
 
-	struct framebuf fb;
+	framebuf fb;
 	int ret = open_fb(&fb, fb_dev);
 	if (ret != 0) {
 		printf("Failed to open framebuf. Error: %d\n", ret);
@@ -78,7 +78,7 @@ int lvgl_fb_run(const char* const fb_dev)
 	lv_display_set_flush_cb(display, fb_flush_cb);
 	lv_display_set_user_data(display, &fb);
 
-	uint16_t* buf1 = (uint16_t*)malloc(fb.size);
+	uint16_t* buf1 = new uint16_t[fb.size];
 	lv_display_set_buffers(display, buf1, NULL, fb.size, LV_DISPLAY_RENDER_MODE_PARTIAL);
 
 
@@ -86,7 +86,7 @@ int lvgl_fb_run(const char* const fb_dev)
 
 	// Copied from https://stackoverflow.com/a/27558789
 	pthread_attr_t attr;
-	struct sched_param param;
+	sched_param param;
 
 	pthread_attr_init(&attr);
 	pthread_attr_getschedparam(&attr, &param);

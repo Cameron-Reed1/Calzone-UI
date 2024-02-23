@@ -1,13 +1,21 @@
 #include <lvgl.h>
+#include <vector>
 
 
-typedef struct {
+class EventsPanel {
+public:
+    EventsPanel(lv_obj_t* parent);
+    ~EventsPanel();
+    void Style();
+
+public:
     lv_obj_t* panel;
+
+private:
+    static void DrawEventList_cb(lv_event_t* event);
+
+private:
     lv_obj_t* header;
-    lv_obj_t** event_labels;
-    uint16_t event_labels_count;
-} lvc_events_panel_t;
+    std::vector<lv_obj_t*> event_labels;
+};
 
-
-lvc_events_panel_t* create_events_panel(lv_obj_t* parent);
-void destroy_events_panel(lvc_events_panel_t* panel);
