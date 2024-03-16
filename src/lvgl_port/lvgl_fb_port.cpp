@@ -111,7 +111,7 @@ int lvgl_fb_run(const char* const fb_dev)
 
     destroy_widgets();
 
-	free(buf1);
+	delete[] buf1;
 	
 	close_fb(&fb);
 
